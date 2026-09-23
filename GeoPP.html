@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buku Ukur Sipat Datar Pulang-Pergi - SMK Geomatika</title>
+    <style>
+        /* Base Reset & Variables */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-main: #f1f5f9;
+            --text-main: #1e293b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --primary-light: #eff6ff;
+            --success: #10b981;
+            --success-hover: #059669;
+            --success-light: #ecfdf5;
+            --amber-light: #fffbeb;
+            --purple-light: #faf5ff;
+            --danger: #f43f5e;
+            --danger-hover: #e11d48;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .font-mono {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 1.25rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon {
+            background-color: #2563eb;
+            padding: 0.625rem;
+            border-radius: 0.75rem;
+            border: 1px solid #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .input-elevasi-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: #1e293b;
+            border-radius: 0.5rem;
+            padding: 0.375rem;
+            border: 1px solid #334155;
+        }
+
+        .input-elevasi-wrapper label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            padding: 0 0.75rem;
+        }
+
+        .input-elevasi-wrapper input {
+            width: 7rem;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: none;
+            background-color: #334155;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .btn-hitung {
+            background-color: var(--success);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.39);
+        }
+
+        .btn-hitung:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Main Content Layout */
+        main {
+            flex-grow: 1;
+            padding: 1.5rem;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Card & Section Styling */
+        .card-section {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .card-section.pergi {
+            border: 1px solid #bfdbfe;
+        }
+
+        .card-section.pulang {
+            border: 1px solid #a7f3d0;
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header.pergi {
+            background-color: var(--primary-light);
+            border-bottom: 1px solid #bfdbfe;
+        }
+
+        .card-header.pulang {
+            background-color: var(--success-light);
+            border-bottom: 1px solid #a7f3d0;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title.pergi { color: #1e3a8a; }
+        .section-title.pulang { color: #064e3b; }
+
+        .indicator-pill {
+            width: 0.75rem;
+            height: 2rem;
+            border-radius: 9999px;
+            display: inline-block;
+        }
+
+        .indicator-pill.pergi { background-color: var(--primary); }
+        .indicator-pill.pulang { background-color: var(--success); }
+
+        .btn-add {
+            font-size: 0.875rem;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-add.pergi { background-color: #2563eb; }
+        .btn-add.pergi:hover { background-color: #1d4ed8; }
+        .btn-add.pulang { background-color: #059669; }
+        .btn-add.pulang:hover { background-color: #047857; }
+
+        /* Table Styling */
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+            padding-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        th {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        td {
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Inputs & Computed Cells */
+        .input-mm {
+            width: 60px;
+            text-align: center;
+            padding: 0.375rem 0.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            background-color: #ffffff;
+        }
+
+        .input-mm:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+
+        .calc-val {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 0.375rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            color: #ffffff;
+            background-color: var(--danger);
+        }
+
+        /* Rekapitulasi Section */
+        #rekap_section {
+            transition: all 0.5s ease-in-out;
+        }
+
+        #rekap_section.hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(1rem);
+        }
+
+        .rekap-card {
+            background-color: #1e293b;
+            border-radius: 1rem;
+            border: 1px solid #334155;
+            color: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .rekap-header {
+            background-color: #0f172a;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .rekap-grid {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-box {
+            background-color: rgba(51, 65, 85, 0.5);
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+        }
+
+        .stat-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #475569;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label { color: #94a3b8; }
+
+        /* Badge Status */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            border: 1px solid transparent;
+        }
+
+        .status-badge.success {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .status-badge.error {
+            background-color: rgba(244, 63, 94, 0.2);
+            color: #fb7185;
+            border-color: rgba(244, 63, 94, 0.5);
+        }
+
+        /* Toast Container */
+        #toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            color: #ffffff;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(100%);
+            pointer-events: auto;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.bg-error { background-color: var(--danger); }
+        .toast.bg-success { background-color: var(--success); }
+        .toast.bg-info { background-color: #1e293b; }
+
+        /* Helpers Input Number */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER SYSTEM -->
+    <header>
+        <div class="header-container">
+            <div class="header-brand">
+                <div class="brand-icon">
+                    <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 style="font-size: 1.5rem; font-weight: 700;">Buku Ukur Sipat Datar Pulang-Pergi</h1>
+                    <p style="font-size: 0.875rem; color: #94a3b8;">SMK Geomatika &bull; Auto-Tab Input (4 Digit Milimeter)</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <div class="input-elevasi-wrapper">
+                    <label for="elevasi_awal">Elevasi Awal (m)</label>
+                    <input type="number" id="elevasi_awal" value="100.000" step="0.001" class="font-mono">
+                </div>
+                <button onclick="hitungSemuaData()" class="btn-hitung">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    HITUNG DATA
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- RUTE PERGI -->
+        <section class="card-section pergi">
+            <div class="card-header pergi">
+                <h2 class="section-title pergi">
+                    <span class="indicator-pill pergi"></span> Rute Pergi
+                </h2>
+                <button onclick="tambahBaris('pergi')" class="btn-add pergi">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah Slag Pergi
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 48px;">Slag</th>
+                            <th colspan="3" style="background-color: #e2e8f0;">Bidikan Belakang (mm)</th>
+                            <th colspan="3" style="background-color: #e2e8f0;">Bidikan Muka (mm)</th>
+                            <th rowspan="2" style="background-color: var(--primary-light); color: #1e40af; width: 80px;">Jarak<br>Optis (m)</th>
+                            <th rowspan="2" style="width: 80px;">Δh<br>Hitung (m)</th>
+                            <th rowspan="2" style="background-color: var(--purple-light); color: #6b21a8; width: 80px;">Koreksi<br>(m)</th>
+                            <th rowspan="2" style="width: 96px;">Δh<br>Definitif (m)</th>
+                            <th rowspan="2" style="background-color: var(--success-light); color: #065f46; font-size: 0.875rem; width: 112px;">Elevasi<br>(m)</th>
+                            <th rowspan="2" style="width: 40px;">Aksi</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color: #f1f5f9;">BA</th>
+                            <th style="background-color: #f1f5f9;">BT</th>
+                            <th style="background-color: #f1f5f9;">BB</th>
+                            <th style="background-color: var(--amber-light);">BA</th>
+                            <th style="background-color: var(--amber-light);">BT</th>
+                            <th style="background-color: var(--amber-light);">BB</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-pergi">
+                        <!-- Content dynamic by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- RUTE PULANG -->
+        <section class="card-section pulang">
+            <div class="card-header pulang">
+                <h2 class="section-title pulang">
+                    <span class="indicator-pill pulang"></span> Rute Pulang
+                </h2>
+                <button onclick="tambahBaris('pulang')" class="btn-add pulang">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah Slag Pulang
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 48px;">Slag</th>
+                            <th colspan="3" style="background-color: #e2e8f0;">Bidikan Belakang (mm)</th>
+                            <th colspan="3" style="background-color: #e2e8f0;">Bidikan Muka (mm)</th>
+                            <th rowspan="2" style="background-color: var(--success-light); color: #065f46; width: 80px;">Jarak<br>Optis (m)</th>
+                            <th rowspan="2" style="width: 80px;">Δh<br>Hitung (m)</th>
+                            <th rowspan="2" style="background-color: var(--purple-light); color: #6b21a8; width: 80px;">Koreksi<br>(m)</th>
+                            <th rowspan="2" style="width: 96px;">Δh<br>Definitif (m)</th>
+                            <th rowspan="2" style="background-color: var(--success-light); color: #065f46; font-size: 0.875rem; width: 112px;">Elevasi<br>(m)</th>
+                            <th rowspan="2" style="width: 40px;">Aksi</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color: var(--success-light);">BA</th>
+                            <th style="background-color: var(--success-light);">BT</th>
+                            <th style="background-color: var(--success-light);">BB</th>
+                            <th style="background-color: var(--amber-light);">BA</th>
+                            <th style="background-color: var(--amber-light);">BT</th>
+                            <th style="background-color: var(--amber-light);">BB</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-pulang">
+                        <!-- Content dynamic by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- REKAPITULASI HASIL -->
+        <section id="rekap_section" class="hidden">
+            <div class="rekap-card">
+                <div class="rekap-header">
+                    <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem;">
+                        <svg width="24" height="24" fill="none" stroke="#60a5fa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        REKAPITULASI HASIL KESELURUHAN
+                    </h2>
+                    <div id="status_toleransi" class="status-badge">
+                        <!-- Dynamic Status -->
+                    </div>
+                </div>
+                
+                <div class="rekap-grid">
+                    <!-- Stats Pergi -->
+                    <div class="stat-box">
+                        <div class="stat-title" style="color: #93c5fd;">Data Rute Pergi</div>
+                        <div class="stat-row"><span class="stat-label">Total Slag:</span> <span id="r_slag_pergi" class="font-mono" style="font-weight: 700;">0</span></div>
+                        <div class="stat-row"><span class="stat-label">Total Jarak:</span> <span class="font-mono"><span id="r_jarak_pergi" style="font-weight: 700;">0</span> m</span></div>
+                        <div class="stat-row"><span class="stat-label">Kesalahan (ΣΔh):</span> <span class="font-mono"><span id="r_kesalahan_pergi" style="font-weight: 700; color: #fb7185;">0</span> m</span></div>
+                        <div class="stat-row"><span class="stat-label">Elevasi Akhir:</span> <span class="font-mono"><span id="r_elev_pergi" style="font-weight: 700; color: #60a5fa;">0</span> m</span></div>
+                    </div>
+
+                    <!-- Stats Pulang -->
+                    <div class="stat-box">
+                        <div class="stat-title" style="color: #6ee7b7;">Data Rute Pulang</div>
+                        <div class="stat-row"><span class="stat-label">Total Slag:</span> <span id="r_slag_pulang" class="font-mono" style="font-weight: 700;">0</span></div>
+                        <div class="stat-row"><span class="stat-label">Total Jarak:</span> <span class="font-mono"><span id="r_jarak_pulang" style="font-weight: 700;">0</span> m</span></div>
+                        <div class="stat-row"><span class="stat-label">Kesalahan (ΣΔh):</span> <span class="font-mono"><span id="r_kesalahan_pulang" style="font-weight: 700; color: #fb7185;">0</span> m</span></div>
+                        <div class="stat-row"><span class="stat-label">Elevasi Akhir:</span> <span class="font-mono"><span id="r_elev_pulang" style="font-weight: 700; color: #34d399;">0</span> m</span></div>
+                    </div>
+
+                    <!-- Rata-rata Gabungan -->
+                    <div class="stat-box">
+                        <div class="stat-title" style="color: #d8b4fe;">Rata-Rata Pulang-Pergi</div>
+                        <div style="margin-bottom: 1rem;">
+                            <span class="stat-label" style="font-size: 0.75rem; display: block;">Rata-Rata Elevasi Akhir</span>
+                            <div class="font-mono" style="font-size: 1.5rem; font-weight: 900;"><span id="r_rata_elevasi">0.000</span> <span style="font-size: 0.875rem; font-weight: 400; color: #64748b;">m</span></div>
+                        </div>
+                        <div>
+                            <span class="stat-label" style="font-size: 0.75rem; display: block;">Rata-Rata Δh (Beda Tinggi)</span>
+                            <div class="font-mono" style="font-size: 1.5rem; font-weight: 900;"><span id="r_rata_dh">0.000</span> <span style="font-size: 0.875rem; font-weight: 400; color: #64748b;">m</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Kesalahan Penutup -->
+                    <div class="stat-box" style="background-color: rgba(49, 46, 129, 0.4); border-color: rgba(67, 56, 202, 0.5);">
+                        <div class="stat-title" style="color: #a5b4fc;">Kesalahan Penutup Jarak</div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span id="r_kes_penutup" class="font-mono" style="font-size: 2.25rem; font-weight: 900; color: #818cf8;">0.0000</span>
+                        </div>
+                        <div style="font-size: 0.625rem; color: #818cf8; opacity: 0.8;">
+                            Rumus: Σ Slag / √(Σ Jarak Pergi + Σ Jarak Pulang)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <!-- LOGIC APPLICATION -->
+    <script>
+        // State Management
+        let dataPergi = [];
+        let dataPulang = [];
+        let globalIdCounter = 0;
+
+        function createRowObj() {
+            globalIdCounter++;
+            return {
+                id: globalIdCounter,
+                b_ba: '', b_bt: '', b_bb: '',
+                m_ba: '', m_bt: '', m_bb: '',
+                jarak: null, dh: null, koreksi: null, dh_def: null, elevasi: null
+            };
+        }
+
+        function init() {
+            for (let i = 0; i < 3; i++) dataPergi.push(createRowObj());
+            for (let i = 0; i < 3; i++) dataPulang.push(createRowObj());
+            renderTables();
+        }
+
+        function tambahBaris(rute) {
+            if (rute === 'pergi') dataPergi.push(createRowObj());
+            else dataPulang.push(createRowObj());
+            renderTables();
+            hideRecap();
+        }
+
+        function hapusBaris(rute, id) {
+            const arr = rute === 'pergi' ? dataPergi : dataPulang;
+            if (arr.length <= 1) {
+                showToast("Tabel minimal memiliki 1 baris (slag).", "error");
+                return;
+            }
+            if (rute === 'pergi') dataPergi = dataPergi.filter(r => r.id !== id);
+            else dataPulang = dataPulang.filter(r => r.id !== id);
+            renderTables();
+            hideRecap();
+        }
+
+        function hideRecap() {
+            const section = document.getElementById('rekap_section');
+            section.classList.add('hidden');
+        }
+
+        function handleInput(rute, id, field, inputEl) {
+            hideRecap();
+            
+            let val = inputEl.value.replace(/[^0-9]/g, '').substring(0, 4);
+            inputEl.value = val; 
+
+            const arr = rute === 'pergi' ? dataPergi : dataPulang;
+            const idx = arr.findIndex(r => r.id === id);
+            if (idx !== -1) arr[idx][field] = val;
+
+            if (val.length === 4) {
+                const inputs = Array.from(document.querySelectorAll('.auto-tab-input'));
+                const currentIndex = inputs.indexOf(inputEl);
+                if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus();
+                    inputs[currentIndex + 1].select();
+                }
+            }
+        }
+
+        function hitungSemuaData() {
+            const elevAwalInput = document.getElementById('elevasi_awal').value;
+            if (!elevAwalInput) {
+                showToast("Harap isi Elevasi Awal!", "error");
+                return;
+            }
+            const elevasiAwal = parseFloat(elevAwalInput);
+
+            let resPergi = processRute(dataPergi, elevasiAwal);
+            if (!resPergi.success) return;
+
+            let resPulang = processRute(dataPulang, resPergi.finalElevasi);
+            if (!resPulang.success) return;
+
+            renderTables();
+
+            document.getElementById('r_slag_pergi').textContent = resPergi.totalSlag;
+            document.getElementById('r_jarak_pergi').textContent = resPergi.totalJarak.toFixed(2);
+            document.getElementById('r_kesalahan_pergi').textContent = resPergi.kesalahan.toFixed(4);
+            document.getElementById('r_elev_pergi').textContent = resPergi.finalElevasi.toFixed(3);
+
+            document.getElementById('r_slag_pulang').textContent = resPulang.totalSlag;
+            document.getElementById('r_jarak_pulang').textContent = resPulang.totalJarak.toFixed(2);
+            document.getElementById('r_kesalahan_pulang').textContent = resPulang.kesalahan.toFixed(4);
+            document.getElementById('r_elev_pulang').textContent = resPulang.finalElevasi.toFixed(3);
+
+            const totalSlag = resPergi.totalSlag + resPulang.totalSlag;
+            const totalJarak = resPergi.totalJarak + resPulang.totalJarak;
+            
+            const kesPenutupJarak = totalJarak > 0 ? (totalSlag / Math.sqrt(totalJarak)) : 0;
+            document.getElementById('r_kes_penutup').textContent = kesPenutupJarak.toFixed(4);
+
+            const rataElevasi = (resPergi.finalElevasi + resPulang.finalElevasi) / 2;
+            document.getElementById('r_rata_elevasi').textContent = rataElevasi.toFixed(3);
+
+            const rataDh = (resPergi.kesalahan + resPulang.kesalahan) / 2;
+            document.getElementById('r_rata_dh').textContent = rataDh.toFixed(4);
+
+            const selisihDh = Math.abs(resPergi.kesalahan + resPulang.kesalahan);
+            
+            const badge = document.getElementById('status_toleransi');
+            if (selisihDh <= 0.003) {
+                badge.className = "status-badge success";
+                badge.innerHTML = `TOLERANSI TERPENUHI (Selisih: ${selisihDh.toFixed(4)}m &le; 0.003m)`;
+            } else {
+                badge.className = "status-badge error";
+                badge.innerHTML = `DI LUAR TOLERANSI (Selisih: ${selisihDh.toFixed(4)}m &gt; 0.003m)`;
+            }
+
+            const section = document.getElementById('rekap_section');
+            section.classList.remove('hidden');
+
+            showToast("Perhitungan Selesai!", "success");
+        }
+
+        function processRute(dataArray, startingElevasi) {
+            let sumJarak = 0;
+            let sumDh = 0;
+            let totalSlag = 0;
+
+            for (let i = 0; i < dataArray.length; i++) {
+                const r = dataArray[i];
+                if (!r.b_ba || !r.b_bt || !r.b_bb || !r.m_ba || !r.m_bt || !r.m_bb) {
+                    showToast(`Terdapat data bacaan benang yang kosong pada baris ke-${i+1}.`, "error");
+                    return { success: false };
+                }
+                
+                const ba_b_mm = parseInt(r.b_ba, 10); const bt_b_mm = parseInt(r.b_bt, 10); const bb_b_mm = parseInt(r.b_bb, 10);
+                const ba_m_mm = parseInt(r.m_ba, 10); const bt_m_mm = parseInt(r.m_bt, 10); const bb_m_mm = parseInt(r.m_bb, 10);
+                
+                const ba_b = ba_b_mm/1000; const bt_b = bt_b_mm/1000; const bb_b = bb_b_mm/1000;
+                const ba_m = ba_m_mm/1000; const bt_m = bt_m_mm/1000; const bb_m = bb_m_mm/1000;
+
+                const j_blk = (ba_b - bb_b) * 100;
+                const j_mk = (ba_m - bb_m) * 100;
+                
+                r.jarak = Math.max(0, j_blk) + Math.max(0, j_mk); 
+                r.dh = bt_b - bt_m;
+
+                sumJarak += r.jarak;
+                sumDh += r.dh;
+                totalSlag++;
+            }
+
+            const kesalahan = sumDh;
+            const koreksiSlag = totalSlag > 0 ? (kesalahan / totalSlag) * -1 : 0;
+            
+            let currentElev = startingElevasi;
+
+            for (let i = 0; i < dataArray.length; i++) {
+                const r = dataArray[i];
+                r.koreksi = koreksiSlag;
+                r.dh_def = r.dh + r.koreksi;
+                
+                currentElev += r.dh_def;
+                r.elevasi = currentElev;
+            }
+
+            return {
+                success: true,
+                totalSlag: totalSlag,
+                totalJarak: sumJarak,
+                kesalahan: kesalahan,
+                finalElevasi: currentElev
+            };
+        }
+
+        function renderTables() {
+            const tbodyPergi = document.getElementById('tbody-pergi');
+            const tbodyPulang = document.getElementById('tbody-pulang');
+            
+            tbodyPergi.innerHTML = '';
+            tbodyPulang.innerHTML = '';
+
+            dataPergi.forEach((r, i) => tbodyPergi.appendChild(createTrElement('pergi', r, i)));
+            dataPulang.forEach((r, i) => tbodyPulang.appendChild(createTrElement('pulang', r, i)));
+        }
+
+        function createTrElement(rute, r, index) {
+            const tr = document.createElement('tr');
+            const fM = (val, d=3) => val !== null ? val.toFixed(d) : '-';
+            
+            const fields = [
+                { f: 'b_ba', v: r.b_ba }, { f: 'b_bt', v: r.b_bt }, { f: 'b_bb', v: r.b_bb },
+                { f: 'm_ba', v: r.m_ba }, { f: 'm_bt', v: r.m_bt }, { f: 'm_bb', v: r.m_bb }
+            ];
+
+            let tdInputs = '';
+            fields.forEach(obj => {
+                tdInputs += `<td>
+                    <input type="text" maxlength="4" value="${obj.v}" 
+                        oninput="handleInput('${rute}', ${r.id}, '${obj.f}', this)" 
+                        class="input-mm auto-tab-input" placeholder="0000">
+                </td>`;
+            });
+
+            tr.innerHTML = `
+                <td style="font-weight: 700; color: #64748b;">${index + 1}</td>
+                ${tdInputs}
+                <td class="calc-val" style="color: #1d4ed8; background-color: rgba(248, 250, 252, 0.5);">${fM(r.jarak, 2)}</td>
+                <td class="calc-val" style="color: ${r.dh < 0 ? '#e11d48' : 'inherit'};">${fM(r.dh, 4)}</td>
+                <td class="calc-val" style="color: #7e22ce; background-color: rgba(250, 245, 255, 0.3);">${fM(r.koreksi, 5)}</td>
+                <td class="calc-val" style="color: ${r.dh_def < 0 ? '#e11d48' : 'inherit'}; font-weight: 700;">${fM(r.dh_def, 4)}</td>
+                <td class="calc-val" style="color: #047857; background-color: rgba(236, 253, 245, 0.3); font-size: 1rem; font-weight: 700;">${fM(r.elevasi, 3)}</td>
+                <td>
+                    <button onclick="hapusBaris('${rute}', ${r.id})" class="btn-delete" title="Hapus Baris">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </td>
+            `;
+            return tr;
+        }
+
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-info";
+            let icon = '';
+            
+            if (type === "error") {
+                bgClass = "bg-error";
+                icon = `<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+            } else if (type === "success") {
+                bgClass = "bg-success";
+                icon = `<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+            }
+
+            toast.className = `toast ${bgClass}`;
+            toast.innerHTML = `${icon} <span style="font-weight: 500;">${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => { toast.classList.add('show'); }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
