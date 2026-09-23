@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- Mengizinkan Zoom-In & Zoom-Out di HP -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
     <title>Buku Ukur Sipat Datar Pulang-Pergi - SMK Geomatika</title>
     <style>
@@ -39,6 +38,7 @@
             flex-direction: column;
             touch-action: manipulation;
             overflow-x: hidden;
+            width: 100%;
         }
 
         .font-mono {
@@ -54,6 +54,7 @@
             top: 0;
             z-index: 50;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
 
         .header-container {
@@ -138,33 +139,32 @@
             transform: translateY(-1px);
         }
 
-        /* Main Content Layout */
+        /* Main Layout */
         main {
             flex-grow: 1;
             padding: 1rem;
-            max-width: 1600px;
             width: 100%;
+            max-width: 100%;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 2rem;
+            min-width: 0;
         }
 
-        /* Card & Section Styling */
+        /* Card Section */
         .card-section {
             background-color: #ffffff;
             border-radius: 1rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
             overflow: hidden;
         }
 
-        .card-section.pergi {
-            border: 1px solid #bfdbfe;
-        }
-
-        .card-section.pulang {
-            border: 1px solid #a7f3d0;
-        }
+        .card-section.pergi { border: 1px solid #bfdbfe; }
+        .card-section.pulang { border: 1px solid #a7f3d0; }
 
         .card-header {
             padding: 1rem 1.5rem;
@@ -224,25 +224,34 @@
         .btn-add.pulang { background-color: #059669; }
         .btn-add.pulang:hover { background-color: #047857; }
 
-        /* Table Styling & Scroll Fix */
+        /* Table Container & Touch Scroll/Zoom Styles */
         .table-container {
+            width: 100% !important;
+            max-width: 100% !important;
             overflow-x: auto !important;
+            overflow-y: hidden !important;
             -webkit-overflow-scrolling: touch !important;
-            width: 100%;
-            display: block;
-            touch-action: pan-x pan-y;
+            display: block !important;
+            touch-action: pan-x pan-y !important;
             padding-bottom: 0.5rem;
             position: relative;
-            z-index: 1;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .table-container:active {
+            cursor: grabbing;
         }
 
         table {
-            width: 100%;
-            min-width: 1100px !important;
+            width: max-content !important;
+            min-width: 1200px !important;
             border-collapse: collapse;
             font-size: 0.875rem;
             text-align: center;
             white-space: nowrap;
+            transform-origin: top left;
+            transition: transform 0.05s ease-out;
         }
 
         th {
@@ -309,6 +318,7 @@
         /* Rekapitulasi Section */
         #rekap_section {
             transition: all 0.5s ease-in-out;
+            width: 100%;
         }
 
         #rekap_section.hidden {
@@ -340,7 +350,7 @@
         .rekap-grid {
             padding: 1.5rem;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 1.5rem;
         }
 
@@ -370,7 +380,6 @@
 
         .stat-label { color: #94a3b8; }
 
-        /* Badge Status */
         .status-badge {
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
@@ -391,7 +400,6 @@
             border-color: rgba(244, 63, 94, 0.5);
         }
 
-        /* Toast Container */
         #toast-container {
             position: fixed;
             bottom: 1.5rem;
@@ -426,7 +434,6 @@
         .toast.bg-success { background-color: var(--success); }
         .toast.bg-info { background-color: #1e293b; }
 
-        /* Helpers Input Number */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
@@ -434,7 +441,6 @@
 </head>
 <body>
 
-    <!-- HEADER SYSTEM -->
     <header>
         <div class="header-container">
             <div class="header-brand">
@@ -444,8 +450,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 style="font-size: 1.5rem; font-weight: 700;">Buku Ukur Sipat Datar Pulang-Pergi</h1>
-                    <p style="font-size: 0.875rem; color: #94a3b8;">SMK Geomatika &bull; Auto-Tab Input (4 Digit Milimeter)</p>
+                    <h1 style="font-size: 1.25rem; font-weight: 700;">Buku Ukur Sipat Datar Pulang-Pergi</h1>
+                    <p style="font-size: 0.75rem; color: #94a3b8;">SMK Geomatika &bull; Auto-Tab Input (4 Digit Milimeter)</p>
                 </div>
             </div>
             
@@ -462,7 +468,6 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main>
         <!-- RUTE PERGI -->
         <section class="card-section pergi">
@@ -499,9 +504,7 @@
                             <th style="background-color: var(--amber-light);">BB</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody-pergi">
-                        <!-- Content dynamic by JS -->
-                    </tbody>
+                    <tbody id="tbody-pergi"></tbody>
                 </table>
             </div>
         </section>
@@ -541,9 +544,7 @@
                             <th style="background-color: var(--amber-light);">BB</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody-pulang">
-                        <!-- Content dynamic by JS -->
-                    </tbody>
+                    <tbody id="tbody-pulang"></tbody>
                 </table>
             </div>
         </section>
@@ -556,13 +557,10 @@
                         <svg width="24" height="24" fill="none" stroke="#60a5fa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                         REKAPITULASI HASIL KESELURUHAN
                     </h2>
-                    <div id="status_toleransi" class="status-badge">
-                        <!-- Dynamic Status -->
-                    </div>
+                    <div id="status_toleransi" class="status-badge"></div>
                 </div>
                 
                 <div class="rekap-grid">
-                    <!-- Stats Pergi -->
                     <div class="stat-box">
                         <div class="stat-title" style="color: #93c5fd;">Data Rute Pergi</div>
                         <div class="stat-row"><span class="stat-label">Total Slag:</span> <span id="r_slag_pergi" class="font-mono" style="font-weight: 700;">0</span></div>
@@ -571,7 +569,6 @@
                         <div class="stat-row"><span class="stat-label">Elevasi Akhir:</span> <span class="font-mono"><span id="r_elev_pergi" style="font-weight: 700; color: #60a5fa;">0</span> m</span></div>
                     </div>
 
-                    <!-- Stats Pulang -->
                     <div class="stat-box">
                         <div class="stat-title" style="color: #6ee7b7;">Data Rute Pulang</div>
                         <div class="stat-row"><span class="stat-label">Total Slag:</span> <span id="r_slag_pulang" class="font-mono" style="font-weight: 700;">0</span></div>
@@ -580,7 +577,6 @@
                         <div class="stat-row"><span class="stat-label">Elevasi Akhir:</span> <span class="font-mono"><span id="r_elev_pulang" style="font-weight: 700; color: #34d399;">0</span> m</span></div>
                     </div>
 
-                    <!-- Rata-rata Gabungan -->
                     <div class="stat-box">
                         <div class="stat-title" style="color: #d8b4fe;">Rata-Rata Pulang-Pergi</div>
                         <div style="margin-bottom: 1rem;">
@@ -593,7 +589,6 @@
                         </div>
                     </div>
 
-                    <!-- Kesalahan Penutup -->
                     <div class="stat-box" style="background-color: rgba(49, 46, 129, 0.4); border-color: rgba(67, 56, 202, 0.5);">
                         <div class="stat-title" style="color: #a5b4fc;">Kesalahan Penutup Jarak</div>
                         <div style="margin-bottom: 0.5rem;">
@@ -608,12 +603,9 @@
         </section>
     </main>
 
-    <!-- Toast Notifications Container -->
     <div id="toast-container"></div>
 
-    <!-- LOGIC APPLICATION -->
     <script>
-        // State Management
         let dataPergi = [];
         let dataPulang = [];
         let globalIdCounter = 0;
@@ -632,6 +624,7 @@
             for (let i = 0; i < 3; i++) dataPergi.push(createRowObj());
             for (let i = 0; i < 3; i++) dataPulang.push(createRowObj());
             renderTables();
+            enableTableInteractions();
         }
 
         function tambahBaris(rute) {
@@ -660,7 +653,6 @@
 
         function handleInput(rute, id, field, inputEl) {
             hideRecap();
-            
             let val = inputEl.value.replace(/[^0-9]/g, '').substring(0, 4);
             inputEl.value = val; 
 
@@ -829,6 +821,64 @@
                 </td>
             `;
             return tr;
+        }
+
+        /* --- FITUR INTERAKSI GESER & TOUCH PINCH ZOOM --- */
+        function enableTableInteractions() {
+            const containers = document.querySelectorAll('.table-container');
+
+            containers.forEach(container => {
+                const table = container.querySelector('table');
+                let scale = 1;
+                let startDist = 0;
+                let initialScale = 1;
+
+                // Drag Scroll via Mouse / Touch Drag
+                let isDown = false;
+                let startX, scrollLeft;
+
+                container.addEventListener('mousedown', (e) => {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+                    isDown = true;
+                    startX = e.pageX - container.offsetLeft;
+                    scrollLeft = container.scrollLeft;
+                });
+
+                container.addEventListener('mouseleave', () => { isDown = false; });
+                container.addEventListener('mouseup', () => { isDown = false; });
+                container.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - container.offsetLeft;
+                    const walk = (x - startX) * 1.5;
+                    container.scrollLeft = scrollLeft - walk;
+                });
+
+                // Pinch to Zoom pada Layar Sentuh HP
+                container.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 2) {
+                        startDist = Math.hypot(
+                            e.touches[0].pageX - e.touches[1].pageX,
+                            e.touches[0].pageY - e.touches[1].pageY
+                        );
+                        initialScale = scale;
+                    }
+                }, { passive: true });
+
+                container.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 2) {
+                        const dist = Math.hypot(
+                            e.touches[0].pageX - e.touches[1].pageX,
+                            e.touches[0].pageY - e.touches[1].pageY
+                        );
+                        if (startDist > 0) {
+                            const newScale = Math.min(Math.max(0.6, initialScale * (dist / startDist)), 1.8);
+                            scale = newScale;
+                            table.style.transform = `scale(${scale})`;
+                        }
+                    }
+                }, { passive: true });
+            });
         }
 
         function showToast(message, type = "info") {
