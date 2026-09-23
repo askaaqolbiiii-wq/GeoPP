@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Mengizinkan Zoom-In & Zoom-Out di HP -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
     <title>Buku Ukur Sipat Datar Pulang-Pergi - SMK Geomatika</title>
     <style>
         /* Base Reset & Variables */
@@ -138,7 +139,7 @@
         /* Main Content Layout */
         main {
             flex-grow: 1;
-            padding: 1.5rem;
+            padding: 1rem;
             max-width: 1600px;
             width: 100%;
             margin: 0 auto;
@@ -221,19 +222,24 @@
         .btn-add.pulang { background-color: #059669; }
         .btn-add.pulang:hover { background-color: #047857; }
 
-        /* Table Styling */
+        /* Table Styling & Scroll Fix */
         .table-container {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             width: 100%;
+            max-width: 100vw;
             padding-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         table {
             width: 100%;
-            min-width: 1200px;
+            min-width: 900px;
             border-collapse: collapse;
             font-size: 0.875rem;
             text-align: center;
+            white-space: nowrap;
         }
 
         th {
